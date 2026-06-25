@@ -438,8 +438,8 @@ body{{background:var(--bg);color:var(--text);font-family:var(--font);min-height:
 
 <script>
 const TODAY = new Date().toISOString().slice(0,10);
-const CUTS  = {cutoff_vars};
-let DATA = {rows_json};
+const CUTS  = __CUTS_PLACEHOLDER__;
+let DATA = __DATA_PLACEHOLDER__;
 
 const C = {{
   rtr:       {{lbl:'RTR',         cls:'b-rtr', col:'var(--rtr)',  bg:'var(--rtr-bg)', b:'var(--rtr-b)',  dot:'var(--rtr-dot)'}},
@@ -805,6 +805,10 @@ setTimeout(()=>location.reload(), 15*60*1000);
 </script>
 </body>
 </html>"""
+
+# Safe injection — must happen AFTER f-string to avoid brace mangling
+html = html.replace('__DATA_PLACEHOLDER__', rows_json)
+html = html.replace('__CUTS_PLACEHOLDER__', cutoff_vars)
 
 with open(DASHBOARD_FILE, "w", encoding="utf-8") as f:
     f.write(html)
