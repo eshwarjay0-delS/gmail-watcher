@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-generate_dashboard.py v11
+generate_dashboard.py v11 
 - Self-contained: builds full HTML inline, no template file needed
 - 60/30/15 day sections — past 15 days revealed, 15-30 collapsed, 30-60 collapsed
 - Auto-deletes records older than 60 days with disclaimer
