@@ -710,7 +710,7 @@ function renderTL(){{
         <div class="ev-title">${{e(r.role||r.subj.slice(0,60))}}</div>
         <div class="ev-meta">${{e(r.rec||'')}}</div>
         ${{r.co?`<div class="ev-meta">${{e(r.co)}}</div>`:''}}
-        <div class="ev-pills">${{locP}}${{rateP}}${{r.ph?`<a href="tel:${{e(r.ph)}}" class="ep" style="color:var(--int);border-color:var(--int-b);background:var(--int-bg);text-decoration:none" onclick="event.stopPropagation()"><i class="ti ti-phone" style="font-size:10px"></i> ${{e(r.ph)}}</a>':''}}</div>
+        <div class="ev-pills">${{locP}}${{rateP}}${{r.ph?`<a href="tel:${{e(r.ph)}}" class="ep" style="color:var(--int);border-color:var(--int-b);background:var(--int-bg);text-decoration:none" onclick="event.stopPropagation()"><i class="ti ti-phone" style="font-size:10px"></i> ${{e(r.ph)}}</a>`:''}}</div>
       </div>`;
     }}).join('');
     let nowHtml='';
