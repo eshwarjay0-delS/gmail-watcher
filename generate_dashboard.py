@@ -7,7 +7,7 @@ generate_dashboard.py v11
 - Reads data/rtr_followup_tracker.csv → writes dashboard.html
 """
 import csv, json, os, re
-from datetime import datetime, date, timedeltah
+from datetime import datetime, date, timedelta
 
 BASE_DIR       = os.path.dirname(os.path.abspath(__file__))
 CSV_FILE       = os.path.join(BASE_DIR, "data", "rtr_followup_tracker.csv")
