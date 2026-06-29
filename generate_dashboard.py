@@ -112,7 +112,7 @@ def extract_role_title(subject, role_field, notes=""):
         r'^(&\s*|regarding\s+|about\s+|update on\s+)',
     ]:
         subj = re.sub(pat, '', subj, flags=re.I).strip()
-    m = re.match(r'^(.{10,80?})\s*([||]|–|—|::|\s{2,}|@\s)', subj)
+    m = re.match(r'^(.{10,80?})\s*([||]|â|â|::|\s{2,}|@\s)', subj)
     if m:
         return m.group(1).strip()[:100]
     return subj[:100] if subj else (role_field or "Unknown Role")[:100]
@@ -308,7 +308,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 @media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr)}}
 .stat{border-radius:14px;padding:14px 13px;cursor:pointer;border:1px solid;transition:transform .13s,box-shadow .13s;position:relative}
 .stat:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.1)}
-.stat::after{content:'›';position:absolute;top:11px;right:12px;font-size:18px;opacity:.5}
+.stat::after{content:'âº';position:absolute;top:11px;right:12px;font-size:18px;opacity:.5}
 .stat .num{font-size:38px;font-weight:700;line-height:1;letter-spacing:-1px}
 .stat .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:5px;opacity:.85}
 .s-rtr{background:var(--rtr-bg);border-color:var(--rtr-b);color:var(--rtr)}
@@ -508,7 +508,7 @@ document.getElementById('vCal').style.display=isCal?'block':'none';
 document.getElementById('vList').style.display=(!isCal&&!isCo&&!isAll)?'block':'none';
 document.getElementById('vCo').style.display=isCo?'block':'none';
 const tl=document.getElementById('lstTitle');
-if(tl)tl.textContent={rtr:'RTR Submissions',rep:'Reply Needed — Act Now',out:'Remote Roles',int:'Interviews',ass:'Assessments',fol:'Follow-ups'}[t]||t;
+if(tl)tl.textContent={rtr:'RTR Submissions',rep:'Reply Needed â Act Now',out:'Remote Roles',int:'Interviews',ass:'Assessments',fol:'Follow-ups'}[t]||t;
 document.querySelectorAll('.rf-pill').forEach(p=>p.classList.remove('active'));
 const ap=document.getElementById('rf-all');if(ap)ap.classList.add('active');
 if(isCal){renderMo();renderStrip();renderTL();}else if(isCo)renderCo();else if(!isAll)renderBands();
@@ -553,9 +553,9 @@ return rows;
 }
 function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fdt(det){
-if(!det)return{date:'—',time:''};
+if(!det)return{date:'â',time:''};
 const[d,t]=(det+' ').split(' ');
-if(!d)return{date:'—',time:''};
+if(!d)return{date:'â',time:''};
 const[yr,mo,dy]=d.split('-');
 const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][(parseInt(mo)||1)-1]||mo;
 let ts='';
@@ -570,7 +570,7 @@ if((curTab==='out'||curTab==='rep')&&cf){
 const recent=getFiltered3day(cf).filter(r=>(r.det||'').slice(0,10)>=CUTS.d3);
 if(recent.length){
 const rowsHTML=recent.slice(0,12).map(r=>{const dt=fdt(r.det);return '<div class="focus-row">'+(r.ph?'<span class="fr-ph"><i class="ti ti-phone" style="font-size:11px"></i> '+e(r.ph)+'</span>':'')+(r.em?'<span class="fr-em">'+e(r.em)+'</span>':'')+'<span class="fr-role">'+rcDot(r.role_cat)+e(r.role||r.subj.slice(0,45))+'</span><span class="fr-date">'+e(dt.date)+(dt.time?' '+e(dt.time):'')+'</span></div>';}).join('');
-focusHTML='<div class="focus-strip"><h4>Last 3 Days — Sorted by Phone/Email</h4>'+rowsHTML+'</div>';
+focusHTML='<div class="focus-strip"><h4>Last 3 Days â Sorted by Phone/Email</h4>'+rowsHTML+'</div>';
 }
 }
 const fs=document.getElementById('focusStrip');fs.innerHTML=focusHTML;fs.style.display=focusHTML?'block':'none';
@@ -594,18 +594,18 @@ tbody.innerHTML=rows.map(r=>buildRow(r)).join('');
 function buildRow(r){
 const c=Cg(r.cat),ov=r.fup&&r.fup<TODAY,td=r.fup===TODAY;
 const fc=ov?'fup ov':td?'fup td':'fup';
-const ft=r.fup?(ov?'⚠ ':'🔔 ')+r.fup:'—';
-const locP=r.loc==='remote'?'<span class="pill p-remote">🌐 Remote</span>':r.loc==='hybrid'?'<span class="pill p-hybrid">🔀 Hybrid</span>':'';
-const rateP=r.rate?'<span class="pill p-rate">💰 '+e(r.rate)+'</span>':'';
+const ft=r.fup?(ov?'â  ':'ð ')+r.fup:'â';
+const locP=r.loc==='remote'?'<span class="pill p-remote">ð Remote</span>':r.loc==='hybrid'?'<span class="pill p-hybrid">ð Hybrid</span>':'';
+const rateP=r.rate?'<span class="pill p-rate">ð° '+e(r.rate)+'</span>':'';
 const callBtn=r.ph?'<a href="tel:'+e(r.ph)+'" class="ra ra-c" onclick="event.stopPropagation()"><i class="ti ti-phone"></i></a>':'';
 const idx=DATA.indexOf(r),dt=fdt(r.det);
-const wom=r.wom&&r.cat==='reply'?'<div class="wom-badge">🔴 Waiting on You</div>':'';
-const jdPrev=r.jd?'<div class="det-sm" style="margin-top:3px"><strong>JD</strong><span>'+e((r.jd||'').slice(0,70))+'…</span></div>':'';
-const lsBox=r.last_sent?'<div class="last-sent-box"><div class="ls-lbl">📤 Last Sent</div>'+e(r.last_sent)+'</div>':'';
+const wom=r.wom&&r.cat==='reply'?'<div class="wom-badge">ð´ Waiting on You</div>':'';
+const jdPrev=r.jd?'<div class="det-sm" style="margin-top:3px"><strong>JD</strong><span>'+e((r.jd||'').slice(0,70))+'â¦</span></div>':'';
+const lsBox=r.last_sent?'<div class="last-sent-box"><div class="ls-lbl">ð¤ Last Sent</div>'+e(r.last_sent)+'</div>':'';
 return '<tr onclick="toggleRow(''+r.id+'',this,''+r.id+'')" id="tr'+r.id+'">'
 +'<td><span class="badge '+c.cls+'">'+e(c.lbl)+'</span><div style="font-size:10px;color:var(--muted);margin-top:3px">'+e(r.acc)+'</div></td>'
 +'<td><div class="role-title">'+rcDot(r.role_cat)+e(r.role||r.subj.slice(0,60))+'</div><div class="role-co">'+e(r.co||'')+'</div><div style="margin-top:3px">'+locP+rateP+'</div>'+wom+'<div class="row-acts">'+callBtn+'<button class="ra ra-e" onclick="event.stopPropagation();openEditModal('+idx+')"><i class="ti ti-edit"></i></button><button class="ra ra-d" onclick="event.stopPropagation();deleteItem('+idx+')"><i class="ti ti-trash"></i></button></div></td>'
-+'<td>'+(r.ph?'<div class="rec-phone"><i class="ti ti-phone" style="font-size:11px"></i> '+e(r.ph)+'</div>':'')+'<div class="rec-email">'+e(r.em||'')+'</div><div class="rec-name">'+e(r.rec||'—')+'</div><div class="rec-date">'+e(dt.date)+'</div>'+(dt.time?'<div class="rec-time">'+e(dt.time)+'</div>':'')+'</td>'
++'<td>'+(r.ph?'<div class="rec-phone"><i class="ti ti-phone" style="font-size:11px"></i> '+e(r.ph)+'</div>':'')+'<div class="rec-email">'+e(r.em||'')+'</div><div class="rec-name">'+e(r.rec||'â')+'</div><div class="rec-date">'+e(dt.date)+'</div>'+(dt.time?'<div class="rec-time">'+e(dt.time)+'</div>':'')+'</td>'
 +'<td>'+(r.co?'<div class="det-sm"><strong>Client</strong>'+e(r.co)+'</div>':'')+(r.sk?'<div class="det-sm"><strong>Skills</strong><span>'+e(r.sk.slice(0,80))+'</span></div>':'')+jdPrev+lsBox+'</td>'
 +'<td><div class="'+fc+'">'+e(ft)+'</div></td>'
 +'</tr>'
@@ -614,7 +614,7 @@ return '<tr onclick="toggleRow(''+r.id+'',this,''+r.id+'')" id="tr'+r.id+'">'
 +(r.sk?'<div class="dl"><b>Skills</b>'+e(r.sk)+'</div>':'')
 +(r.rate?'<div class="dl"><b>Rate</b><span style="color:var(--int)">'+e(r.rate)+'</span></div>':'')
 +(r.jd?'<div class="jd-box"><div class="jd-lbl">Job Description / Summary</div>'+e(r.jd)+'</div>':'')
-+(r.last_sent?'<div class="last-sent-box"><div class="ls-lbl">📤 Last Sent Message</div>'+e(r.last_sent)+'</div>':'')
++(r.last_sent?'<div class="last-sent-box"><div class="ls-lbl">ð¤ Last Sent Message</div>'+e(r.last_sent)+'</div>':'')
 +'<div class="dl"><b>Account</b>'+e(r.acc)+'</div>'
 +'<div class="dl"><b>Role Type</b><span>'+(RC[r.role_cat||'other']||RC.other).lbl+'</span></div>'
 +'</div></td></tr>';
@@ -626,17 +626,17 @@ function clearSrch(){document.getElementById('srch').value='';document.getElemen
 function toggleSort(){sortAsc=!sortAsc;document.getElementById('sortB').textContent=sortAsc?'Oldest':'Newest';renderBands();}
 function evMap(){const cf=calFilter(),m={};DATA.filter(r=>r.st!=='deleted'&&(!cf||r.cat===cf)).forEach(r=>{[(r.det||''),(r.fup||'')].filter(Boolean).forEach(dt=>{const d=dt.slice(0,10),[yr,mo]=d.split('-').map(Number);if(yr===calY&&mo-1===calM){if(!m[d])m[d]=[];m[d].push(r);}});});return m;}
 function evForDay(ds){const cf=calFilter();return DATA.filter(r=>r.st!=='deleted'&&(!cf||r.cat===cf)&&((r.det||'').slice(0,10)===ds||(r.fup||'').slice(0,10)===ds));}
-function renderMo(){const ccL={all:'All',rtr:'RTR',reply:'Reply Needed',outreach:'Remote',interview:'Interviews',assessment:'Assessments',followup:'Follow-ups'};document.getElementById('calLbl').textContent=MO[calM]+' '+calY+' — '+(ccL[calMode]||'');const first=new Date(calY,calM,1).getDay(),days=new Date(calY,calM+1,0).getDate(),em=evMap();let h=DW.map(d=>'<div class="dow">'+d+'</div>').join('');for(let i=0;i<first;i++)h+='<div class="cd empty"></div>';for(let d=1;d<=days;d++){const ds=calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'),evs=em[ds]||[],cats=[...new Set(evs.map(r=>r.cat))],isT=ds===TODAY,isS=ds===selDay;h+='<div class="cd'+(isT?' today':'')+(isS?' sel':'')+'" onclick="selectDay(''+ds+'')"><div class="cd-n">'+d+'</div><div class="cd-dots">'+cats.map(c=>'<div class="dot" style="background:'+Cg(c).dot+'"></div>').join('')+'</div>'+(evs.length?'<div class="cd-cnt">'+evs.length+'</div>':'')+'</div>';}document.getElementById('moGrid').innerHTML=h;}
+function renderMo(){const ccL={all:'All',rtr:'RTR',reply:'Reply Needed',outreach:'Remote',interview:'Interviews',assessment:'Assessments',followup:'Follow-ups'};document.getElementById('calLbl').textContent=MO[calM]+' '+calY+' â '+(ccL[calMode]||'');const first=new Date(calY,calM,1).getDay(),days=new Date(calY,calM+1,0).getDate(),em=evMap();let h=DW.map(d=>'<div class="dow">'+d+'</div>').join('');for(let i=0;i<first;i++)h+='<div class="cd empty"></div>';for(let d=1;d<=days;d++){const ds=calY+'-'+String(calM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'),evs=em[ds]||[],cats=[...new Set(evs.map(r=>r.cat))],isT=ds===TODAY,isS=ds===selDay;h+='<div class="cd'+(isT?' today':'')+(isS?' sel':'')+'" onclick="selectDay(''+ds+'')"><div class="cd-n">'+d+'</div><div class="cd-dots">'+cats.map(c=>'<div class="dot" style="background:'+Cg(c).dot+'"></div>').join('')+'</div>'+(evs.length?'<div class="cd-cnt">'+evs.length+'</div>':'')+'</div>';}document.getElementById('moGrid').innerHTML=h;}
 function calPrev(){calM--;if(calM<0){calM=11;calY--;}renderMo();renderStrip();}
 function calNext(){calM++;if(calM>11){calM=0;calY++;}renderMo();renderStrip();}
 function goToday(){calY=new Date().getFullYear();calM=new Date().getMonth();selDay=TODAY;renderMo();renderStrip();renderTL();}
 function selectDay(ds){selDay=ds;const[yr,mo]=ds.split('-').map(Number);if(yr!==calY||mo-1!==calM){calY=yr;calM=mo-1;}renderMo();renderStrip();renderTL();}
 function renderStrip(){const strip=document.getElementById('dayStrip'),em=evMap(),ctr=new Date(selDay+'T12:00:00'),days=[];for(let i=-7;i<=14;i++){const d=new Date(ctr);d.setDate(d.getDate()+i);days.push(d);}strip.innerHTML=days.map(d=>{const ds=d.toISOString().slice(0,10),evs=em[ds]||[],cats=[...new Set(evs.map(r=>r.cat))],isT=ds===TODAY,isSel=ds===selDay;return'<div class="ds'+(isT?' tod':'')+(isSel?' sel':'')+'" onclick="selectDay(''+ds+'')" id="dsd-'+ds+'"><div class="ds-dow">'+DWF[d.getDay()]+'</div><div class="ds-d">'+d.getDate()+'</div><div class="ds-dots">'+cats.slice(0,4).map(c=>'<div class="ds-dot" style="background:'+(isSel?'rgba(255,255,255,.7)':Cg(c).dot)+'"></div>').join('')+'</div></div>';}).join('');setTimeout(()=>{const el=document.getElementById('dsd-'+selDay);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});},50);}
-function renderTL(){const evs=evForDay(selDay),d=new Date(selDay+'T12:00:00'),lbl=selDay===TODAY?'Today — '+d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});document.getElementById('dayHdrLbl').textContent=lbl;document.getElementById('dayCnt').textContent=evs.length+' event'+(evs.length!==1?'s':'');const timedEvs=evs.filter(r=>(r.det||'').slice(0,10)===selDay),fupEvs=evs.filter(r=>(r.fup||'').slice(0,10)===selDay&&(r.det||'').slice(0,10)!==selDay),aw=document.getElementById('alldayWrap');if(fupEvs.length){aw.style.display='block';document.getElementById('alldayBody').innerHTML=fupEvs.map(r=>{const c=Cg(r.cat);return'<div class="allday-ev" style="border-color:'+c.col+';background:'+c.bg+'" onclick="openEditModal('+DATA.indexOf(r)+')"><div style="flex:1;min-width:0"><div style="font-size:10px;font-weight:700;color:'+c.col+';margin-bottom:1px">'+c.lbl+' — follow-up due</div><div style="font-size:12px;font-weight:600;line-height:1.3">'+e(r.role||r.subj.slice(0,55))+'</div><div style="font-size:10px;color:var(--muted)">'+e(r.rec)+' · '+e(r.em)+'</div></div>'+(r.ph?'<a href="tel:'+e(r.ph)+'" style="font-size:11px;color:var(--int);text-decoration:none;font-weight:700;flex-shrink:0" onclick="event.stopPropagation()"><i class="ti ti-phone"></i></a>':'')+'</div>';}).join('');}else{aw.style.display='none';}timedEvs.sort((a,b)=>(a.det||'').localeCompare(b.det||''));const tl=document.getElementById('timeline');if(!timedEvs.length&&!fupEvs.length){tl.innerHTML='<div class="no-evs"><i class="ti ti-calendar-off"></i><p>No events on this day</p></div>';return;}if(!timedEvs.length){tl.innerHTML='';return;}const hourEvs={};timedEvs.forEach(r=>{const tp=(r.det||'').split(' ')[1]||'08:00',hr=Math.max(6,Math.min(22,parseInt(tp)));if(!hourEvs[hr])hourEvs[hr]=[];hourEvs[hr].push(r);});const now=new Date(),nowHr=now.getHours()+now.getMinutes()/60,isToday=selDay===TODAY;let html='';for(let hr=6;hr<=22;hr++){const lbl2=hr===12?'12 PM':hr<12?(hr+' AM'):((hr-12)+' PM'),evH=(hourEvs[hr]||[]).map(r=>{const c=Cg(r.cat),tp=((r.det||'').split(' ')[1]||'').slice(0,5),locP=r.loc==='remote'?'<span class="ep" style="color:var(--out);border-color:var(--out-b);background:var(--out-bg)">Remote</span>':r.loc==='hybrid'?'<span class="ep" style="color:var(--rtr);border-color:var(--rtr-b);background:var(--rtr-bg)">Hybrid</span>':'',rateP=r.rate?'<span class="ep" style="color:var(--int);border-color:var(--int-b);background:var(--int-bg)">'+e(r.rate)+'</span>':'';return'<div class="ev" style="border-color:'+c.col+';background:'+c.bg+'" onclick="openEditModal('+DATA.indexOf(r)+')"><div class="ev-cat" style="color:'+c.col+'">'+c.lbl+' · '+tp+'</div><div class="ev-title">'+e(r.role||r.subj.slice(0,60))+'</div><div class="ev-meta">'+e(r.rec||'')+'</div>'+(r.co?'<div class="ev-meta">'+e(r.co)+'</div>':'')+'<div class="ev-pills">'+locP+rateP+(r.ph?'<a href="tel:'+e(r.ph)+'" class="ep" style="color:var(--int);border-color:var(--int-b);background:var(--int-bg);text-decoration:none" onclick="event.stopPropagation()"><i class="ti ti-phone" style="font-size:10px"></i> '+e(r.ph)+'</a>':'')+'</div></div>';}).join('');let nowH='';if(isToday&&nowHr>=hr&&nowHr<hr+1){const pct=(nowHr-hr)*100;nowH='<div class="now-line" style="top:'+pct+'%"><div class="now-dot"></div><div class="now-badge">'+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')+'</div></div>';}html+='<div class="ts"><div class="tl-lbl">'+lbl2+'</div><div class="tl-evs"><div class="tl-line"></div>'+nowH+evH+'</div></div>';}tl.innerHTML=html;}
-function renderCo(){const cos={};DATA.filter(r=>r.st!=='deleted'&&r.co).forEach(r=>{if(!cos[r.co])cos[r.co]={evs:[],lat:''};cos[r.co].evs.push(r);if((r.det||'')>cos[r.co].lat)cos[r.co].lat=r.det||'';});const sorted=Object.entries(cos).sort((a,b)=>b[1].lat.localeCompare(a[1].lat));document.getElementById('coBody').innerHTML=sorted.length?sorted.map(([name,d],i)=>{const cats=[...new Set(d.evs.map(r=>r.cat))],pills=cats.map(c=>'<span class="badge '+Cg(c).cls+'">'+Cg(c).lbl+'</span>').join(' '),evs=d.evs.sort((a,b)=>(b.det||'').localeCompare(a.det||'')).map(r=>{const dt=fdt(r.det);return'<div class="co-ev"><div style="width:3px;border-radius:2px;flex-shrink:0;background:'+Cg(r.cat).dot+';min-height:28px;margin-top:2px"></div><div><div style="font-size:12px;font-weight:600">'+e(r.role||r.subj.slice(0,60))+'</div><div style="font-size:10px;color:var(--muted)">'+e(dt.date)+(dt.time?' '+e(dt.time):'')+'&nbsp;·&nbsp;'+e(r.rec)+' · '+Cg(r.cat).lbl+'</div></div></div>';}).join('');return'<div class="co-card"><div class="co-hdr" onclick="document.getElementById('ce'+i+'').classList.toggle('open')"><div class="co-icon">🏢</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px">'+e(name)+'</div><div style="font-size:10px;color:var(--muted);margin-top:1px">'+d.evs.length+' events · '+(d.lat||'').slice(0,10)+'</div><div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:3px">'+pills+'</div></div><i class="ti ti-chevron-down" style="color:var(--hint);font-size:16px;flex-shrink:0"></i></div><div class="co-events" id="ce'+i+'">'+evs+'</div></div>';}).join(''):'<div class="empty" style="padding:40px 20px"><i class="ti ti-building"></i><p>No companies tracked yet</p></div>';}
+function renderTL(){const evs=evForDay(selDay),d=new Date(selDay+'T12:00:00'),lbl=selDay===TODAY?'Today â '+d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});document.getElementById('dayHdrLbl').textContent=lbl;document.getElementById('dayCnt').textContent=evs.length+' event'+(evs.length!==1?'s':'');const timedEvs=evs.filter(r=>(r.det||'').slice(0,10)===selDay),fupEvs=evs.filter(r=>(r.fup||'').slice(0,10)===selDay&&(r.det||'').slice(0,10)!==selDay),aw=document.getElementById('alldayWrap');if(fupEvs.length){aw.style.display='block';document.getElementById('alldayBody').innerHTML=fupEvs.map(r=>{const c=Cg(r.cat);return'<div class="allday-ev" style="border-color:'+c.col+';background:'+c.bg+'" onclick="openEditModal('+DATA.indexOf(r)+')"><div style="flex:1;min-width:0"><div style="font-size:10px;font-weight:700;color:'+c.col+';margin-bottom:1px">'+c.lbl+' â follow-up due</div><div style="font-size:12px;font-weight:600;line-height:1.3">'+e(r.role||r.subj.slice(0,55))+'</div><div style="font-size:10px;color:var(--muted)">'+e(r.rec)+' Â· '+e(r.em)+'</div></div>'+(r.ph?'<a href="tel:'+e(r.ph)+'" style="font-size:11px;color:var(--int);text-decoration:none;font-weight:700;flex-shrink:0" onclick="event.stopPropagation()"><i class="ti ti-phone"></i></a>':'')+'</div>';}).join('');}else{aw.style.display='none';}timedEvs.sort((a,b)=>(a.det||'').localeCompare(b.det||''));const tl=document.getElementById('timeline');if(!timedEvs.length&&!fupEvs.length){tl.innerHTML='<div class="no-evs"><i class="ti ti-calendar-off"></i><p>No events on this day</p></div>';return;}if(!timedEvs.length){tl.innerHTML='';return;}const hourEvs={};timedEvs.forEach(r=>{const tp=(r.det||'').split(' ')[1]||'08:00',hr=Math.max(6,Math.min(22,parseInt(tp)));if(!hourEvs[hr])hourEvs[hr]=[];hourEvs[hr].push(r);});const now=new Date(),nowHr=now.getHours()+now.getMinutes()/60,isToday=selDay===TODAY;let html='';for(let hr=6;hr<=22;hr++){const lbl2=hr===12?'12 PM':hr<12?(hr+' AM'):((hr-12)+' PM'),evH=(hourEvs[hr]||[]).map(r=>{const c=Cg(r.cat),tp=((r.det||'').split(' ')[1]||'').slice(0,5),locP=r.loc==='remote'?'<span class="ep" style="color:var(--out);border-color:var(--out-b);background:var(--out-bg)">Remote</span>':r.loc==='hybrid'?'<span class="ep" style="color:var(--rtr);border-color:var(--rtr-b);background:var(--rtr-bg)">Hybrid</span>':'',rateP=r.rate?'<span class="ep" style="color:var(--int);border-color:var(--int-b);background:var(--int-bg)">'+e(r.rate)+'</span>':'';return'<div class="ev" style="border-color:'+c.col+';background:'+c.bg+'" onclick="openEditModal('+DATA.indexOf(r)+')"><div class="ev-cat" style="color:'+c.col+'">'+c.lbl+' Â· '+tp+'</div><div class="ev-title">'+e(r.role||r.subj.slice(0,60))+'</div><div class="ev-meta">'+e(r.rec||'')+'</div>'+(r.co?'<div class="ev-meta">'+e(r.co)+'</div>':'')+'<div class="ev-pills">'+locP+rateP+(r.ph?'<a href="tel:'+e(r.ph)+'" class="ep" style="color:var(--int);border-color:var(--int-b);background:var(--int-bg);text-decoration:none" onclick="event.stopPropagation()"><i class="ti ti-phone" style="font-size:10px"></i> '+e(r.ph)+'</a>':'')+'</div></div>';}).join('');let nowH='';if(isToday&&nowHr>=hr&&nowHr<hr+1){const pct=(nowHr-hr)*100;nowH='<div class="now-line" style="top:'+pct+'%"><div class="now-dot"></div><div class="now-badge">'+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')+'</div></div>';}html+='<div class="ts"><div class="tl-lbl">'+lbl2+'</div><div class="tl-evs"><div class="tl-line"></div>'+nowH+evH+'</div></div>';}tl.innerHTML=html;}
+function renderCo(){const cos={};DATA.filter(r=>r.st!=='deleted'&&r.co).forEach(r=>{if(!cos[r.co])cos[r.co]={evs:[],lat:''};cos[r.co].evs.push(r);if((r.det||'')>cos[r.co].lat)cos[r.co].lat=r.det||'';});const sorted=Object.entries(cos).sort((a,b)=>b[1].lat.localeCompare(a[1].lat));document.getElementById('coBody').innerHTML=sorted.length?sorted.map(([name,d],i)=>{const cats=[...new Set(d.evs.map(r=>r.cat))],pills=cats.map(c=>'<span class="badge '+Cg(c).cls+'">'+Cg(c).lbl+'</span>').join(' '),evs=d.evs.sort((a,b)=>(b.det||'').localeCompare(a.det||'')).map(r=>{const dt=fdt(r.det);return'<div class="co-ev"><div style="width:3px;border-radius:2px;flex-shrink:0;background:'+Cg(r.cat).dot+';min-height:28px;margin-top:2px"></div><div><div style="font-size:12px;font-weight:600">'+e(r.role||r.subj.slice(0,60))+'</div><div style="font-size:10px;color:var(--muted)">'+e(dt.date)+(dt.time?' '+e(dt.time):'')+'&nbsp;Â·&nbsp;'+e(r.rec)+' Â· '+Cg(r.cat).lbl+'</div></div></div>';}).join('');return'<div class="co-card"><div class="co-hdr" onclick="document.getElementById('ce'+i+'').classList.toggle('open')"><div class="co-icon">ð¢</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px">'+e(name)+'</div><div style="font-size:10px;color:var(--muted);margin-top:1px">'+d.evs.length+' events Â· '+(d.lat||'').slice(0,10)+'</div><div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:3px">'+pills+'</div></div><i class="ti ti-chevron-down" style="color:var(--hint);font-size:16px;flex-shrink:0"></i></div><div class="co-events" id="ce'+i+'">'+evs+'</div></div>';}).join(''):'<div class="empty" style="padding:40px 20px"><i class="ti ti-building"></i><p>No companies tracked yet</p></div>';}
 function openEditModal(idx){editIdx=idx;const r=DATA[idx];document.getElementById('mTitle').textContent='Edit entry';document.getElementById('mBody').innerHTML=buildForm(r);document.getElementById('overlay').classList.add('open');document.getElementById('modal').classList.add('open');}
 function openAddModal(){editIdx=null;document.getElementById('mTitle').textContent='Add entry';document.getElementById('mBody').innerHTML=buildForm(null);document.getElementById('overlay').classList.add('open');document.getElementById('modal').classList.add('open');}
-function buildForm(r){const v=(f,d='')=>r?(r[f]||d):d,s=(f,val)=>v(f)===val?'selected':'';return'<div class="field"><label>Category</label><select id="e-cat"><option value="rtr" '+s('cat','rtr')+'>RTR</option><option value="reply" '+s('cat','reply')+'>Reply Needed</option><option value="outreach" '+s('cat','outreach')+'>Remote Role</option><option value="interview" '+s('cat','interview')+'>Interview</option><option value="assessment" '+s('cat','assessment')+'>Assessment</option><option value="followup" '+s('cat','followup')+'>Follow-up</option></select></div><div class="field"><label>Role title</label><input id="e-role" value="'+e(v('role'))+'" placeholder="Cloud Security Engineer"></div><div class="field"><label>Recruiter</label><input id="e-rec" value="'+e(v('rec'))+'" placeholder="Jane Smith"></div><div class="field"><label>Email</label><input id="e-em" value="'+e(v('em'))+'" placeholder="jane@company.com"></div><div class="field"><label>Company / Client</label><input id="e-co" value="'+e(v('co'))+'" placeholder="Bloomberg…"></div><div class="field"><label>Rate</label><input id="e-rate" value="'+e(v('rate'))+'" placeholder="$70/hr W2"></div><div class="field"><label>Phone</label><input id="e-ph" value="'+e(v('ph'))+'" placeholder="646-820-3671"></div><div class="field"><label>Location</label><select id="e-loc"><option value="remote" '+s('loc','remote')+'>Remote</option><option value="hybrid" '+s('loc','hybrid')+'>Hybrid</option><option value="onsite" '+s('loc','onsite')+'>Onsite</option></select></div><div class="field"><label>Follow-up due</label><input type="date" id="e-fup" value="'+v('fup')+'"></div><div class="field"><label>Last Sent Message</label><textarea id="e-ls" placeholder="What did you last send…">'+e(v('last_sent'))+'</textarea></div><div class="field"><label>JD Summary</label><textarea id="e-jd" placeholder="Job description summary…">'+e(v('jd'))+'</textarea></div><div class="field"><label>Status</label><select id="e-st"><option value="open" '+s('st','open')+'>Open</option><option value="done" '+s('st','done')+'>Done</option></select></div>';}
+function buildForm(r){const v=(f,d='')=>r?(r[f]||d):d,s=(f,val)=>v(f)===val?'selected':'';return'<div class="field"><label>Category</label><select id="e-cat"><option value="rtr" '+s('cat','rtr')+'>RTR</option><option value="reply" '+s('cat','reply')+'>Reply Needed</option><option value="outreach" '+s('cat','outreach')+'>Remote Role</option><option value="interview" '+s('cat','interview')+'>Interview</option><option value="assessment" '+s('cat','assessment')+'>Assessment</option><option value="followup" '+s('cat','followup')+'>Follow-up</option></select></div><div class="field"><label>Role title</label><input id="e-role" value="'+e(v('role'))+'" placeholder="Cloud Security Engineer"></div><div class="field"><label>Recruiter</label><input id="e-rec" value="'+e(v('rec'))+'" placeholder="Jane Smith"></div><div class="field"><label>Email</label><input id="e-em" value="'+e(v('em'))+'" placeholder="jane@company.com"></div><div class="field"><label>Company / Client</label><input id="e-co" value="'+e(v('co'))+'" placeholder="Bloombergâ¦"></div><div class="field"><label>Rate</label><input id="e-rate" value="'+e(v('rate'))+'" placeholder="$70/hr W2"></div><div class="field"><label>Phone</label><input id="e-ph" value="'+e(v('ph'))+'" placeholder="646-820-3671"></div><div class="field"><label>Location</label><select id="e-loc"><option value="remote" '+s('loc','remote')+'>Remote</option><option value="hybrid" '+s('loc','hybrid')+'>Hybrid</option><option value="onsite" '+s('loc','onsite')+'>Onsite</option></select></div><div class="field"><label>Follow-up due</label><input type="date" id="e-fup" value="'+v('fup')+'"></div><div class="field"><label>Last Sent Message</label><textarea id="e-ls" placeholder="What did you last sendâ¦">'+e(v('last_sent'))+'</textarea></div><div class="field"><label>JD Summary</label><textarea id="e-jd" placeholder="Job description summaryâ¦">'+e(v('jd'))+'</textarea></div><div class="field"><label>Status</label><select id="e-st"><option value="open" '+s('st','open')+'>Open</option><option value="done" '+s('st','done')+'>Done</option></select></div>';}
 function closeModal(){document.getElementById('overlay').classList.remove('open');document.getElementById('modal').classList.remove('open');editIdx=null;}
 function saveEdit(){const vals={cat:document.getElementById('e-cat').value,role:document.getElementById('e-role').value,rec:document.getElementById('e-rec').value,em:document.getElementById('e-em').value,co:document.getElementById('e-co').value,rate:document.getElementById('e-rate').value,ph:document.getElementById('e-ph').value,loc:document.getElementById('e-loc').value,fup:document.getElementById('e-fup').value,last_sent:document.getElementById('e-ls').value,jd:document.getElementById('e-jd').value,st:document.getElementById('e-st').value};if(editIdx!==null){Object.assign(DATA[editIdx],vals);showToast('Saved');}else{DATA.unshift({id:Date.now()%1e15,det:new Date().toISOString().slice(0,16).replace('T',' '),subj:vals.role,role_cat:'other',wom:false,...vals});showToast('Added');}updateStats();if(curTab==='cal'){renderMo();renderStrip();renderTL();}else if(curTab!=='all')renderBands();if(curTab==='co')renderCo();closeModal();}
 function deleteItem(idx){DATA[idx].st='deleted';updateStats();renderBands();showToast('Deleted');}
@@ -645,109 +645,106 @@ updateStats();setTab('all');setTimeout(()=>location.reload(),15*60*1000);
 """
 
 
-# ── Assemble and write HTML ───────────────────────────────────────
+# ââ Assemble and write HTML âââââââââââââââââââââââââââââââââââââââ
 js_final = JS.replace('__CUTS__', cutoff_vars).replace('__DATA__', rows_json)
 
-html = (
-    '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
-    '<meta charset="UTF-8">\n'
-    '<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">\n'
-    '<title>Job Campaign HQ</title>\n'
-    '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">\n'
-    '<style>\n' + CSS + '</style>\n</head>\n<body>\n'
-    '<div class="hdr"><div class="hdr-top"><div>'
-    '<h1>Job Campaign <em>HQ</em></h1>'
-    '<div class="upd">Updated ' + updated + ' &middot; auto-refresh 15 min</div>'
-    '</div><i class="ti ti-chart-bar" style="font-size:22px;color:var(--muted)"></i></div>'
-    '<div class="search"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i>'
-    '<input type="text" id="srch" placeholder="Search role, recruiter, company, email&hellip;" oninput="doSearch()">'
-    '<span id="clrBtn" onclick="clearSrch()" style="cursor:pointer;font-size:11px;color:var(--hint);display:none">&times;</span></div></div>'
-    '<div class="tab-wrap">'
-    '<div class="tabs" id="topTabs">'
-    '<div class="tab a-all" id="t-all" onclick="setTab('all')">All</div>'
-    '<div class="tab" id="t-cal" onclick="setTab('cal')">&#128197; Calendar</div>'
-    '<div class="tab" id="t-rtr" onclick="setTab('rtr')">&#128203; RTR</div>'
-    '<div class="tab" id="t-rep" onclick="setTab('rep')">&#9889; Reply Needed</div>'
-    '<div class="tab" id="t-out" onclick="setTab('out')">&#127760; Remote</div>'
-    '<div class="tab" id="t-int" onclick="setTab('int')">&#128222; Interviews</div>'
-    '<div class="tab" id="t-ass" onclick="setTab('ass')">&#129514; Assessments</div>'
-    '<div class="tab" id="t-fol" onclick="setTab('fol')">&#9203; Follow-ups</div>'
-    '<div class="tab" id="t-co" onclick="setTab('co')">&#127970; Companies</div>'
-    '</div>'
-    '<div class="role-filter-bar" id="roleFilterBar">'
-    '<div class="rf-pill rf-all active" id="rf-all" onclick="setRoleCatFilter('all')">&#11088; All</div>'
-    '<div class="rf-pill rf-cyber" id="rf-cyber" onclick="setRoleCatFilter('cyber')">&#128737; Cyber</div>'
-    '<div class="rf-pill rf-devops" id="rf-devops" onclick="setRoleCatFilter('devops')">&#9881; DevOps</div>'
-    '<div class="rf-pill rf-ai" id="rf-ai" onclick="setRoleCatFilter('ai')">&#129504; AI/ML</div>'
-    '<div class="rf-pill rf-data" id="rf-data" onclick="setRoleCatFilter('data')">&#128202; Data/FS</div>'
-    '<div class="rf-pill rf-other" id="rf-other" onclick="setRoleCatFilter('other')">&#128193; Other</div>'
-    '</div>'
-    '<div class="cat-cal-row" id="catCalRow">'
-    '<div class="tab a-all" id="cc-all" onclick="setCal('all')">All</div>'
-    '<div class="tab" id="cc-rtr" onclick="setCal('rtr')">RTR</div>'
-    '<div class="tab" id="cc-rep" onclick="setCal('reply')">Reply</div>'
-    '<div class="tab" id="cc-out" onclick="setCal('outreach')">Remote</div>'
-    '<div class="tab" id="cc-int" onclick="setCal('interview')">Interviews</div>'
-    '<div class="tab" id="cc-ass" onclick="setCal('assessment')">Assessments</div>'
-    '<div class="tab" id="cc-fol" onclick="setCal('followup')">Follow-ups</div>'
-    '</div>'
-    '</div>'
-    '<div class="disclaimer" id="disclaimer">&#8505; <strong>Auto-cleanup:</strong> '
-    + str(auto_deleted) + ' record(s) removed (&gt;60 days). '
-    'Data preserved in <code>data/rtr_followup_tracker.csv</code>.</div>'
-    '<div id="vStats"><div class="stats">'
-    '<div class="stat s-rtr" onclick="setTab('rtr')"><div class="num" id="n-rtr">0</div><div class="lbl">&#128203; RTRs</div></div>'
-    '<div class="stat s-rep" onclick="setTab('rep')"><div class="num" id="n-rep">0</div><div class="lbl">&#9889; Reply Needed</div></div>'
-    '<div class="stat s-out" onclick="setTab('out')"><div class="num" id="n-out">0</div><div class="lbl">&#127760; Remote</div></div>'
-    '<div class="stat s-int" onclick="setTab('int')"><div class="num" id="n-int">0</div><div class="lbl">&#128222; Interviews</div></div>'
-    '</div></div>'
-    '<div id="vCal" style="display:none">'
-    '<div class="cal-chrome"><div class="cal-nav-row">'
-    '<button class="cal-btn" onclick="calPrev()"><i class="ti ti-arrow-left"></i></button>'
-    '<h2 id="calLbl"></h2>'
-    '<div style="display:flex;gap:5px"><button class="cal-btn today" onclick="goToday()">Today</button>'
-    '<button class="cal-btn" onclick="calNext()"><i class="ti ti-arrow-right"></i></button></div>'
-    '</div><div class="month-box"><div id="moGrid" class="mo-grid"></div></div></div>'
-    '<div class="day-strip" id="dayStrip"></div>'
-    '<div class="day-tl"><div class="day-hdr"><h3 id="dayHdrLbl">Today</h3><span class="day-cnt" id="dayCnt">0 events</span></div>'
-    '<div class="allday-wrap" id="alldayWrap" style="display:none"><div class="allday-lbl">Follow-ups due</div><div id="alldayBody"></div></div>'
-    '<div class="timeline" id="timeline"></div></div></div>'
-    '<div id="vList" style="display:none"><div class="list-wrap">'
-    '<div class="list-hdr"><h2 id="lstTitle">Activity</h2><button class="sort-btn" id="sortB" onclick="toggleSort()">&darr; Newest</button></div>'
-    '<div id="focusStrip" style="display:none"></div>'
-    '<div class="section-band" id="band15">'
-    '<div class="band-hdr open" onclick="toggleBand('band15')">'
-    '<h3><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block"></span>&nbsp;Last 15 days <span class="bcnt" id="cnt15">0</span></h3>'
-    '<i class="ti ti-chevron-up chev"></i></div>'
-    '<div class="band-body open" id="body15">'
-    '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Category</th><th>Role</th><th>Recruiter</th><th>Details</th><th>Follow-up</th></tr></thead><tbody id="tbody15"></tbody></table></div>'
-    '<div id="empty15" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>No activity in last 15 days</p></div></div></div>'
-    '<div class="section-band" id="band30" style="margin-top:8px">'
-    '<div class="band-hdr" onclick="toggleBand('band30')">'
-    '<h3><span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;display:inline-block"></span>&nbsp;15&ndash;30 days ago <span class="bcnt" id="cnt30">0</span></h3>'
-    '<i class="ti ti-chevron-down chev"></i></div>'
-    '<div class="band-body" id="body30">'
-    '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Category</th><th>Role</th><th>Recruiter</th><th>Details</th><th>Follow-up</th></tr></thead><tbody id="tbody30"></tbody></table></div>'
-    '<div id="empty30" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>No activity in 15-30 day range</p></div></div></div>'
-    '<div class="section-band" id="band60" style="margin-top:8px">'
-    '<div class="band-hdr" onclick="toggleBand('band60')">'
-    '<h3><span style="width:10px;height:10px;border-radius:50%;background:#6b7a99;display:inline-block"></span>&nbsp;30&ndash;60 days ago <span class="bcnt" id="cnt60">0</span></h3>'
-    '<i class="ti ti-chevron-down chev"></i></div>'
-    '<div class="band-body" id="body60">'
-    '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Category</th><th>Role</th><th>Recruiter</th><th>Details</th><th>Follow-up</th></tr></thead><tbody id="tbody60"></tbody></table></div>'
-    '<div id="empty60" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>No activity in 30-60 day range</p></div></div></div>'
-    '<div style="height:80px"></div></div></div>'
-    '<div id="vCo" style="display:none;padding:12px 0 90px"><div id="coBody"></div></div>'
-    '<div class="overlay" id="overlay" onclick="closeModal()"></div>'
-    '<div class="modal" id="modal"><div class="modal-handle"></div>'
-    '<div class="modal-hdr"><h2 id="mTitle">Edit entry</h2></div>'
-    '<div class="modal-body" id="mBody"></div>'
-    '<div class="modal-acts"><button class="mbtn cancel" onclick="closeModal()">Cancel</button>'
-    '<button class="mbtn save" onclick="saveEdit()">&#128190; Save</button></div></div>'
-    '<div class="toast" id="toast"></div>'
-    '<button class="fab" onclick="openAddModal()">&#xFF0B;</button>'
-    '<script>\n' + js_final + '\n</' + 'script>\n</body>\n</html>'
-)
+
+_parts = []
+_parts.append('<!DOCTYPE html>\n<html lang="en">\n<head>\n')
+_parts.append('<meta charset="UTF-8">\n')
+_parts.append('<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">\n')
+_parts.append('<title>Job Campaign HQ</title>\n')
+_parts.append('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">\n')
+_parts.append('<style>\n')
+_parts.append(CSS)
+_parts.append('</style>\n</head>\n<body>\n')
+_parts.append('<div class="hdr"><div class="hdr-top"><div>')
+_parts.append('<h1>Job Campaign <em>HQ</em></h1>')
+_parts.append('<div class="upd">Updated ' + updated + ' &middot; auto-refresh 15 min</div>')
+_parts.append('</div><i class="ti ti-chart-bar" style="font-size:22px;color:var(--muted)"></i></div>')
+_parts.append('<div class="search"><i class="ti ti-search" style="color:var(--hint);font-size:15px"></i>')
+_parts.append('<input type="text" id="srch" placeholder="Search role, recruiter, company, email&hellip;" oninput="doSearch()">')
+_parts.append('<span id="clrBtn" onclick="clearSrch()" style="cursor:pointer;font-size:11px;color:var(--hint);display:none">&times;</span></div></div>')
+_parts.append('<div class="tab-wrap">')
+_parts.append('<div class="tabs" id="topTabs">')
+_parts.append('<div class="tab a-all" id="t-all" onclick="setTab(\'all\')">All</div>')
+_parts.append('<div class="tab" id="t-cal" onclick="setTab(\'cal\')">&#128197; Calendar</div>')
+_parts.append('<div class="tab" id="t-rtr" onclick="setTab(\'rtr\')">&#128203; RTR</div>')
+_parts.append('<div class="tab" id="t-rep" onclick="setTab(\'rep\')">&#9889; Reply Needed</div>')
+_parts.append('<div class="tab" id="t-out" onclick="setTab(\'out\')">&#127760; Remote</div>')
+_parts.append('<div class="tab" id="t-int" onclick="setTab(\'int\')">&#128222; Interviews</div>')
+_parts.append('<div class="tab" id="t-ass" onclick="setTab(\'ass\')">&#129514; Assessments</div>')
+_parts.append('<div class="tab" id="t-fol" onclick="setTab(\'fol\')">&#9203; Follow-ups</div>')
+_parts.append('<div class="tab" id="t-co" onclick="setTab(\'co\')">&#127970; Companies</div>')
+_parts.append('</div>')
+_parts.append('<div class="role-filter-bar" id="roleFilterBar">')
+_parts.append('<div class="rf-pill rf-all active" id="rf-all" onclick="setRoleCatFilter(\'all\')">&#11088; All</div>')
+_parts.append('<div class="rf-pill rf-cyber" id="rf-cyber" onclick="setRoleCatFilter(\'cyber\')">&#128737; Cyber</div>')
+_parts.append('<div class="rf-pill rf-devops" id="rf-devops" onclick="setRoleCatFilter(\'devops\')">&#9881; DevOps</div>')
+_parts.append('<div class="rf-pill rf-ai" id="rf-ai" onclick="setRoleCatFilter(\'ai\')">&#129504; AI/ML</div>')
+_parts.append('<div class="rf-pill rf-data" id="rf-data" onclick="setRoleCatFilter(\'data\')">&#128202; Data/FS</div>')
+_parts.append('<div class="rf-pill rf-other" id="rf-other" onclick="setRoleCatFilter(\'other\')">&#128193; Other</div>')
+_parts.append('</div>')
+_parts.append('<div class="cat-cal-row" id="catCalRow">')
+_parts.append('<div class="tab a-all" id="cc-all" onclick="setCal(\'all\')">All</div>')
+_parts.append('<div class="tab" id="cc-rtr" onclick="setCal(\'rtr\')">RTR</div>')
+_parts.append('<div class="tab" id="cc-rep" onclick="setCal(\'reply\')">Reply</div>')
+_parts.append('<div class="tab" id="cc-out" onclick="setCal(\'outreach\')">Remote</div>')
+_parts.append('<div class="tab" id="cc-int" onclick="setCal(\'interview\')">Interviews</div>')
+_parts.append('<div class="tab" id="cc-ass" onclick="setCal(\'assessment\')">Assessments</div>')
+_parts.append('<div class="tab" id="cc-fol" onclick="setCal(\'followup\')">Follow-ups</div>')
+_parts.append('</div></div>')
+_parts.append('<div class="disclaimer" id="disclaimer">&#8505; <strong>Auto-cleanup:</strong> ')
+_parts.append(str(auto_deleted) + ' record(s) removed (&gt;60 days). Data preserved in <code>data/rtr_followup_tracker.csv</code>.</div>')
+_parts.append('<div id="vStats"><div class="stats">')
+_parts.append('<div class="stat s-rtr" onclick="setTab(\'rtr\')"><div class="num" id="n-rtr">0</div><div class="lbl">&#128203; RTRs</div></div>')
+_parts.append('<div class="stat s-rep" onclick="setTab(\'rep\')"><div class="num" id="n-rep">0</div><div class="lbl">&#9889; Reply Needed</div></div>')
+_parts.append('<div class="stat s-out" onclick="setTab(\'out\')"><div class="num" id="n-out">0</div><div class="lbl">&#127760; Remote</div></div>')
+_parts.append('<div class="stat s-int" onclick="setTab(\'int\')"><div class="num" id="n-int">0</div><div class="lbl">&#128222; Interviews</div></div>')
+_parts.append('</div></div>')
+_parts.append('<div id="vCal" style="display:none">')
+_parts.append('<div class="cal-chrome"><div class="cal-nav-row">')
+_parts.append('<button class="cal-btn" onclick="calPrev()"><i class="ti ti-arrow-left"></i></button>')
+_parts.append('<h2 id="calLbl"></h2>')
+_parts.append('<div style="display:flex;gap:5px"><button class="cal-btn today" onclick="goToday()">Today</button>')
+_parts.append('<button class="cal-btn" onclick="calNext()"><i class="ti ti-arrow-right"></i></button></div>')
+_parts.append('</div><div class="month-box"><div id="moGrid" class="mo-grid"></div></div></div>')
+_parts.append('<div class="day-strip" id="dayStrip"></div>')
+_parts.append('<div class="day-tl"><div class="day-hdr"><h3 id="dayHdrLbl">Today</h3><span class="day-cnt" id="dayCnt">0 events</span></div>')
+_parts.append('<div class="allday-wrap" id="alldayWrap" style="display:none"><div class="allday-lbl">Follow-ups due</div><div id="alldayBody"></div></div>')
+_parts.append('<div class="timeline" id="timeline"></div></div></div>')
+_parts.append('<div id="vList" style="display:none"><div class="list-wrap">')
+_parts.append('<div class="list-hdr"><h2 id="lstTitle">Activity</h2><button class="sort-btn" id="sortB" onclick="toggleSort()">&darr; Newest</button></div>')
+_parts.append('<div id="focusStrip" style="display:none"></div>')
+_parts.append('<div class="section-band" id="band15"><div class="band-hdr open" onclick="toggleBand(\'band15\')">')
+_parts.append('<h3><span style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block"></span>&nbsp;Last 15 days <span class="bcnt" id="cnt15">0</span></h3>')
+_parts.append('<i class="ti ti-chevron-up chev"></i></div><div class="band-body open" id="body15">')
+_parts.append('<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Category</th><th>Role</th><th>Recruiter</th><th>Details</th><th>Follow-up</th></tr></thead><tbody id="tbody15"></tbody></table></div>')
+_parts.append('<div id="empty15" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>No activity in last 15 days</p></div></div></div>')
+_parts.append('<div class="section-band" id="band30" style="margin-top:8px"><div class="band-hdr" onclick="toggleBand(\'band30\')">')
+_parts.append('<h3><span style="width:10px;height:10px;border-radius:50%;background:#f59e0b;display:inline-block"></span>&nbsp;15&ndash;30 days ago <span class="bcnt" id="cnt30">0</span></h3>')
+_parts.append('<i class="ti ti-chevron-down chev"></i></div><div class="band-body" id="body30">')
+_parts.append('<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Category</th><th>Role</th><th>Recruiter</th><th>Details</th><th>Follow-up</th></tr></thead><tbody id="tbody30"></tbody></table></div>')
+_parts.append('<div id="empty30" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>No activity in 15-30 day range</p></div></div></div>')
+_parts.append('<div class="section-band" id="band60" style="margin-top:8px"><div class="band-hdr" onclick="toggleBand(\'band60\')">')
+_parts.append('<h3><span style="width:10px;height:10px;border-radius:50%;background:#6b7a99;display:inline-block"></span>&nbsp;30&ndash;60 days ago <span class="bcnt" id="cnt60">0</span></h3>')
+_parts.append('<i class="ti ti-chevron-down chev"></i></div><div class="band-body" id="body60">')
+_parts.append('<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Category</th><th>Role</th><th>Recruiter</th><th>Details</th><th>Follow-up</th></tr></thead><tbody id="tbody60"></tbody></table></div>')
+_parts.append('<div id="empty60" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>No activity in 30-60 day range</p></div></div></div>')
+_parts.append('<div style="height:80px"></div></div></div>')
+_parts.append('<div id="vCo" style="display:none;padding:12px 0 90px"><div id="coBody"></div></div>')
+_parts.append('<div class="overlay" id="overlay" onclick="closeModal()"></div>')
+_parts.append('<div class="modal" id="modal"><div class="modal-handle"></div>')
+_parts.append('<div class="modal-hdr"><h2 id="mTitle">Edit entry</h2></div>')
+_parts.append('<div class="modal-body" id="mBody"></div>')
+_parts.append('<div class="modal-acts"><button class="mbtn cancel" onclick="closeModal()">Cancel</button>')
+_parts.append('<button class="mbtn save" onclick="saveEdit()">&#128190; Save</button></div></div>')
+_parts.append('<div class="toast" id="toast"></div>')
+_parts.append('<button class="fab" onclick="openAddModal()">&#xFF0B;</button>')
+_parts.append('<script>\n')
+_parts.append(js_final)
+_parts.append('\n</scr' + 'ipt>\n</body>\n</html>')
+html = ''.join(_parts)
 
 with open(DASHBOARD_FILE, "w", encoding="utf-8") as f:
     f.write(html)
