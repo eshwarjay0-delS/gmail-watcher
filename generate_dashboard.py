@@ -602,7 +602,7 @@ const idx=DATA.indexOf(r),dt=fdt(r.det);
 const wom=r.wom&&r.cat==='reply'?'<div class="wom-badge">ð´ Waiting on You</div>':'';
 const jdPrev=r.jd?'<div class="det-sm" style="margin-top:3px"><strong>JD</strong><span>'+e((r.jd||'').slice(0,70))+'â¦</span></div>':'';
 const lsBox=r.last_sent?'<div class="last-sent-box"><div class="ls-lbl">ð¤ Last Sent</div>'+e(r.last_sent)+'</div>':'';
-return '<tr onclick="toggleRow(''+r.id+'',this,''+r.id+'')" id="tr'+r.id+'">'
+return '<tr onclick="toggleRow('+r.id+',this,'+r.id+')" id="tr'+r.id+'">'
 +'<td><span class="badge '+c.cls+'">'+e(c.lbl)+'</span><div style="font-size:10px;color:var(--muted);margin-top:3px">'+e(r.acc)+'</div></td>'
 +'<td><div class="role-title">'+rcDot(r.role_cat)+e(r.role||r.subj.slice(0,60))+'</div><div class="role-co">'+e(r.co||'')+'</div><div style="margin-top:3px">'+locP+rateP+'</div>'+wom+'<div class="row-acts">'+callBtn+'<button class="ra ra-e" onclick="event.stopPropagation();openEditModal('+idx+')"><i class="ti ti-edit"></i></button><button class="ra ra-d" onclick="event.stopPropagation();deleteItem('+idx+')"><i class="ti ti-trash"></i></button></div></td>'
 +'<td>'+(r.ph?'<div class="rec-phone"><i class="ti ti-phone" style="font-size:11px"></i> '+e(r.ph)+'</div>':'')+'<div class="rec-email">'+e(r.em||'')+'</div><div class="rec-name">'+e(r.rec||'â')+'</div><div class="rec-date">'+e(dt.date)+'</div>'+(dt.time?'<div class="rec-time">'+e(dt.time)+'</div>':'')+'</td>'
