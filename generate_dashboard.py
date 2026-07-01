@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-generate_dashboard.py v12
+generate_dashboard.py v13
 Enhanced Job Campaign HQ Dashboard - Full Feature Update
 Features:
 - 15/15-30/30-60 day bands for ALL categories
@@ -247,7 +247,8 @@ for r in rows:
         "last_sent": last_sent,
     })
 
-rows_json = json.dumps(js_rows, ensure_ascii=False)
+rows_json = json.dumps(js_rows, ensure_ascii=True)
+rows_json = rows_json.replace("</script>", "<\/script>")
 cutoff_vars = json.dumps({"d60":cutoff_60,"d30":cutoff_30,"d15":cutoff_15,"d3":cutoff_3,"auto_deleted":auto_deleted})
 
 CSS = r"""
