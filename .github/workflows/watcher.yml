@@ -7,6 +7,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: gmail-watcher
+  cancel-in-progress: false
+
 jobs:
   watch:
     runs-on: ubuntu-latest
