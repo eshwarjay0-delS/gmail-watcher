@@ -204,23 +204,25 @@ for r in rows:
         cat = "reply"
     subject = r.get("subject","") or ""
     notes   = r.get("notes","") or ""
+    body_ex = r.get("body_excerpt","") or ""
+    classify_text = (notes + " " + body_ex).strip()
     skills  = r.get("skills","") or ""
     role_f  = r.get("role","") or ""
     em      = r.get("sender_email", r.get("sender","")) or ""
-    if is_rejection(subject, notes):
+    if is_rejection(subject, classify_text):
         continue
-    if is_initial_screening(subject, notes, cat):
+    if is_initial_screening(subject, classify_text, cat):
         cat = "interview"
     smart_role = extract_role_title(subject, role_f, notes)
     if is_generic_subject(smart_role) and is_generic_subject(subject):
         continue
     role_cat = classify_role_category(smart_role, skills)
-    jd_summary = extract_jd_summary(notes, skills)
+    jd_summary = extract_jd_summary(body_ex, skills)
     norm_key = (cat, normalize(em), normalize(smart_role))
     if norm_key in seen_keys:
         continue
     seen_keys[norm_key] = True
-    waiting_on_me = is_waiting_on_me(subject, notes, cat)
+    waiting_on_me = is_waiting_on_me(subject, classify_text, cat)
     last_sent = ""
     ms = re.search(r'(last[_\s]sent|my reply|i replied|i sent)[:\s]+(.{10,200})', notes, re.I)
     if ms:

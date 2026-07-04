@@ -433,6 +433,7 @@ CSV_HEADERS = [
     "detected_at", "category", "account", "subject", "sender",
     "sender_email", "recruiter_name", "role", "company", "location_type",
     "phones", "links", "rate", "notes", "followup_due", "status", "calendar_added",
+    "body_excerpt",
 ]
 
 def load_csv_uid_set() -> set:
@@ -668,6 +669,7 @@ def process_account(acct: dict, state: dict, csv_uid_set: set):
                 "followup_due":   followup_due,
                 "status":         "open",
                 "calendar_added": "yes" if cal_added else "no",
+                "body_excerpt":   re.sub(r"\s+", " ", body).strip()[:600],
             }
 
             # Write to CSV (dedup by uid_key)
