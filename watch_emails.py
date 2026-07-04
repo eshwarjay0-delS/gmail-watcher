@@ -257,6 +257,7 @@ def extract_role(subject: str) -> str:
     s = re.sub(r"^(re:|fwd?:|fw:)\s*", "", subject, flags=re.IGNORECASE).strip()
     s = re.sub(r"^(RTR|Right to Represent|Rate Confirmation|Opening for|Looking for"
                r"|Hiring for|URGENT|Immediate|Hot Req)[:\s–-]*", "", s, flags=re.IGNORECASE).strip()
+    s = re.sub(r"^[|:–\-\s]+", "", s)
     s = re.split(r"\s*[|–\-]{1,2}\s*(Remote|Hybrid|Onsite|Location|\d{2,} years)", s, flags=re.IGNORECASE)[0]
     return s.strip()[:100]
 

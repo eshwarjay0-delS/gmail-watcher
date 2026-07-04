@@ -112,7 +112,7 @@ def extract_role_title(subject, role_field, notes=""):
         r'^(&\s*|regarding\s+|about\s+|update on\s+)',
     ]:
         subj = re.sub(pat, '', subj, flags=re.I).strip()
-    m = re.match(r'^(.{10,80?})\s*([||]|–|—|::|\s{2,}|@\s)', subj)
+    m = re.match(r'^(.{10,80}?)\s*([||]|–|—|::|\s{2,}|@\s)', subj)
     if m:
         return m.group(1).strip()[:100]
     return subj[:100] if subj else (role_field or "Unknown Role")[:100]
