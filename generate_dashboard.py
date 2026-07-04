@@ -1,4 +1,4 @@
-h#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 generate_dashboard.py v14
 Enhanced Job Campaign HQ Dashboard - Full Feature Update
