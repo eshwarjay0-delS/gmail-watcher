@@ -619,6 +619,8 @@ def process_account(acct: dict, state: dict, csv_uid_set: set):
             should_alert = False
             if cat == "rtr":
                 should_alert = True
+                if cat in CALENDAR_CATS:
+                    cal_added = add_to_calendar(subject, sender, body, links, cat)
             elif cat == "reply_needed":
                 should_alert = True
             elif cat == "outreach":
