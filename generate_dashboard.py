@@ -248,7 +248,7 @@ for r in rows:
     })
 
 rows_json = json.dumps(js_rows, ensure_ascii=True)
-rows_json = rows_json.replace("</script>", "<\/script>")
+rows_json = rows_json.replace("</script>", "<\\/script>")
 cutoff_vars = json.dumps({"d60":cutoff_60,"d30":cutoff_30,"d15":cutoff_15,"d3":cutoff_3,"auto_deleted":auto_deleted})
 
 CSS = r"""
